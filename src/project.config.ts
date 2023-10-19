@@ -1,7 +1,9 @@
 type QoS = 0 | 1 | 2;
 
-const MQTT_PORT = 1883;
+const MQTT_PORT = 1884;
 const NODE_PORT = 3000;
+const AMQP_USER = "admin";
+const AMQP_PASSWORD = "admin";
 
 export const config = {
   NODE_PORT: 3000,
@@ -13,4 +15,6 @@ export const config = {
   MQTT_PASSWORD: "admin",
   MQTT_BROKER_URL: `mqtt://localhost:${MQTT_PORT}/`,
   MQTT_QOS: 1 as QoS,
+  AMQP_QUEUE_NAME: "coordinates-queue",
+  AMQP_URL: `amqp://${AMQP_USER}:${AMQP_PASSWORD}@localhost`,
 };

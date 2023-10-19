@@ -35,11 +35,11 @@ broker.on("publish", (packet, client) => {
     })
     .then((response) => {
       console.log(
-        "📤 Pacote enviado para ser adicionado a fila => ",
+        "📩 Package sent to be added to the queue => ",
         response.data
       );
     })
     .catch((error) => {
-      console.error("❌ Erro na solicitação POST:", error);
+      console.error("❌ Request error POST:", error.code);
     });
 });
