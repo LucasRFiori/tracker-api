@@ -1,9 +1,11 @@
 type QoS = 0 | 1 | 2;
 
 const MQTT_PORT = 1883;
+const NODE_PORT = 3000;
 
 export const config = {
   NODE_PORT: 3000,
+  NODE_URL: `http://localhost:${NODE_PORT}`,
   MQTT_PORT,
   MQTT_TOPIC: "coordinates",
   MQTT_CLIENT_ID: "mobile-device",

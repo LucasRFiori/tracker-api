@@ -22,23 +22,23 @@ function publishCoordinates() {
     coordinates,
     { qos: config.MQTT_QOS },
     () => {
-      console.log(`Sending: ${coordinates}`);
+      console.log(`📤 Sending: ${coordinates}`);
     }
   );
 }
 
 client.on("connect", () => {
-  console.log("Connected to the MQTT broker");
+  console.log("✅ Connected to the MQTT broker");
 
   setInterval(publishCoordinates, 3000);
 });
 
 client.on("error", (error) => {
-  console.error("Connection error:", error);
+  console.error("❌ Connection error:", error);
 });
 
 process.on("SIGINT", () => {
-  console.log("Disconnecting from the MQTT broker and exiting the client");
+  console.log("💤 Disconnecting from the MQTT broker and exiting the client");
   client.end();
   process.exit();
 });

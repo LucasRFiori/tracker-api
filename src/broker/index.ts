@@ -1,16 +1,17 @@
 import aedes from "aedes";
 import net from "net";
 import { config } from "../project.config";
+import axios from "axios";
 
 const broker = new aedes();
 const server = net.createServer(broker.handle);
 
 server.listen(config.MQTT_PORT, () => {
-  console.log(`Broker MQTT está ouvindo na porta ${config.MQTT_PORT}`);
+  console.log(`🚀 Broker running at ${config.MQTT_PORT}`);
 });
 
 broker.on("client", (client) => {
-  console.log("Novo cliente MQTT conectado:", client.id);
+  console.log("📲 New MQTT client connected", client.id);
 });
 
 broker.on("publish", (packet, client) => {
@@ -26,8 +27,19 @@ broker.on("publish", (packet, client) => {
     longitude,
   };
 
-  console.log(
-    "🚀 ~ file: broker.ts:27 ~ broker.on ~ payloadToSend:",
-    payloadToSend
-  );
+  axios
+    .post(`${config.NODE_URL}/location-queue`, payloadToSend, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((response) => {
+      console.log(
+        "📤 Pacote enviado para ser adicionado a fila => ",
+        response.data
+      );
+    })
+    .catch((error) => {
+      console.error("❌ Erro na solicitação POST:", error);
+    });
 });
