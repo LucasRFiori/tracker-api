@@ -1,7 +1,7 @@
 import aedes from "aedes";
 import net from "net";
 import { config } from "../project.config";
-import axios from "axios";
+import AmqpProducer from "./AmqpProducer";
 
 const broker = new aedes();
 const server = net.createServer(broker.handle);
@@ -14,7 +14,7 @@ broker.on("client", (client) => {
   console.log("📲 New MQTT client connected", client.id);
 });
 
-broker.on("publish", (packet, client) => {
+broker.on("publish", async (packet, client) => {
   if (!client || !packet.payload) return;
 
   const messageContent = packet.payload.toString("utf-8");
@@ -22,24 +22,15 @@ broker.on("publish", (packet, client) => {
   const [latitude, longitude] = messageContent.split(",");
 
   const payloadToSend = {
-    clientId: client.id,
+    deviceCode: client.id,
     latitude,
     longitude,
   };
 
-  axios
-    .post(`${config.NODE_URL}/location-queue`, payloadToSend, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    .then((response) => {
-      console.log(
-        "📩 Package sent to be added to the queue => ",
-        response.data
-      );
-    })
-    .catch((error) => {
-      console.error("❌ Request error POST:", error.code);
-    });
+  try {
+    const data = await AmqpProducer.sendDataToQueue(payloadToSend);
+    console.log("Recived from AMQP =>", data);
+  } catch (e) {
+    console.log("Error", e);
+  }
 });

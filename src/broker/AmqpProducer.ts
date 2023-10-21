@@ -1,11 +1,11 @@
 import amqp from "amqplib/callback_api";
-import { config } from "../../project.config";
+import { config } from "../project.config";
 
-class TrackRepository {
+class AmqpProducer {
   private channel: any;
 
   constructor() {
-    amqp.connect("amqp://admin:admin@localhost", (error, connection) => {
+    amqp.connect(config.AMQP_URL, (error, connection) => {
       if (error) {
         throw error;
       }
@@ -23,7 +23,7 @@ class TrackRepository {
   async sendDataToQueue(body: any) {
     if (!this.channel) {
       throw new Error(
-        "Canal não está pronto. Verifique a conexão com RabbitMQ."
+        "The channel is not ready. Check connection to RabbitMQ."
       );
     }
 
@@ -36,4 +36,4 @@ class TrackRepository {
   }
 }
 
-export default new TrackRepository();
+export default new AmqpProducer();
