@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { Device } from "../../models/Device";
+import { HTTP } from "../../utils/http";
 
 export async function deleteDevice(req: Request, res: Response) {
   try {
     const { deviceId } = req.params;
 
     if (!deviceId) {
-      return res.status(400).json({
-        error: "Need a device id to remove.",
+      return res.status(HTTP.BAD_REQUEST.CODE).json({
+        error: "Missing device id.",
       });
     }
 

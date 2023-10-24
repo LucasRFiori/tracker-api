@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import { Device } from "../../models/Device";
 import { Location } from "../../models/Location";
 import { cache } from "../../utils/cacheControl";
+import { HTTP } from "../../utils/http";
 
 export async function locationHistory(req: Request, res: Response) {
   try {
     const { deviceId } = req.params;
 
     if (!deviceId) {
-      return res.status(404).json({
+      return res.status(HTTP.BAD_REQUEST.CODE).json({
         error: "Missing param.",
       });
     }
@@ -16,7 +17,7 @@ export async function locationHistory(req: Request, res: Response) {
     const device = await Device.findById(deviceId);
 
     if (!device) {
-      return res.status(404).json({
+      return res.status(HTTP.NOT_FOUND.CODE).json({
         error: "Device not found.",
       });
     }
@@ -38,7 +39,7 @@ export async function locationHistory(req: Request, res: Response) {
     );
 
     if (!locations?.length) {
-      return res.status(404).json({
+      return res.status(HTTP.NOT_FOUND.CODE).json({
         error: "Location history not found.",
         device: deviceId,
       });
