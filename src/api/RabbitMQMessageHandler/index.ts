@@ -15,7 +15,7 @@ class RabbitMQMessageHandler {
     this.queueName = config.AMQP_QUEUE_NAME;
   }
 
-  async consumeAndRemoveMessage() {
+  async queueController() {
     try {
       const connection = await amqp.connect(this.rabbitmqUrl);
       const channel = await connection.createChannel();

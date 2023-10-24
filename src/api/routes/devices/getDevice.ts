@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { Device } from "../../models/Device";
+import { Hateoas } from "../../hateoas";
+import { config } from "../../../project.config";
 
 export async function getDevice(req: Request, res: Response) {
   try {
@@ -19,7 +21,13 @@ export async function getDevice(req: Request, res: Response) {
       });
     }
 
-    return res.json(device);
+    return res.json({
+      device,
+      links: Hateoas.createResourceLinks(
+        `${config.NODE_URL}/devices`,
+        device._id
+      ),
+    });
   } catch (error) {
     console.log(error);
     res.sendStatus(500);

@@ -23,7 +23,7 @@ export async function locationHistory(req: Request, res: Response) {
 
     const locationsFromCache = cache.get(deviceId) as typeof locations;
 
-    if (locationsFromCache.length) {
+    if (locationsFromCache?.length) {
       const filteredLocationsFromCache = locationsFromCache.map((location) => ({
         latitude: location.latitude,
         longitude: location.longitude,
@@ -37,7 +37,7 @@ export async function locationHistory(req: Request, res: Response) {
       "latitude longitude createdAt -_id"
     );
 
-    if (!locations.length) {
+    if (!locations?.length) {
       return res.status(404).json({
         error: "Location history not found.",
         device: deviceId,

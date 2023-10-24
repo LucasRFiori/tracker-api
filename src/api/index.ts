@@ -28,7 +28,7 @@ mongoose
       console.log(`🚀 Server running at ${config.NODE_URL}`);
     });
 
-    RabbitMQMessageHandler.consumeAndRemoveMessage();
+    RabbitMQMessageHandler.queueController();
   })
   .catch(() => {
     console.log("❌ Couldn't connect to MongoDB.");
