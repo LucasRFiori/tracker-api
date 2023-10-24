@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Device } from "../../models/Device";
 import { Location } from "../../models/Location";
+import { cache } from "../../utils/cacheControl";
 
 export async function locationHistory(req: Request, res: Response) {
   try {
@@ -18,6 +19,18 @@ export async function locationHistory(req: Request, res: Response) {
       return res.status(404).json({
         error: "Device not found.",
       });
+    }
+
+    const locationsFromCache = cache.get(deviceId) as typeof locations;
+
+    if (locationsFromCache.length) {
+      const filteredLocationsFromCache = locationsFromCache.map((location) => ({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        createdAt: location.createdAt,
+      }));
+
+      return res.json(filteredLocationsFromCache);
     }
 
     const locations = await Location.find({ deviceId }).select(

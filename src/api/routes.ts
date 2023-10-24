@@ -12,10 +12,10 @@ const router = Router();
 // Device
 router.get("/device", listDevices);
 router.get("/device/:deviceId", getDevice);
+router.get("/device/:deviceId/location", locationHistory);
 router.post("/device", createDevice);
 router.delete("/device/:deviceId", deleteDevice);
 router.patch("/device/:deviceId", updateDevice);
-router.get("/device/:deviceId/location", locationHistory);
 
 //Location
 router.post("/location", saveLocation);

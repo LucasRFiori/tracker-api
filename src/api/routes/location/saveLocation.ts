@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Device } from "../../models/Device";
 import { Location } from "../../models/Location";
+import { cache, clearCacheDaily } from "../../utils/cacheControl";
 
 export async function saveLocation(req: Request, res: Response) {
   try {
@@ -8,7 +9,7 @@ export async function saveLocation(req: Request, res: Response) {
 
     if (!deviceCode || !latitude || !longitude) {
       return res.status(400).json({
-        error: "All mandatory fields should be filled.",
+        error: "Todos os campos obrigatórios devem ser preenchidos.",
       });
     }
 
@@ -16,21 +17,27 @@ export async function saveLocation(req: Request, res: Response) {
 
     if (!device) {
       return res.status(404).json({
-        error: "Device not found.",
+        error: "Dispositivo não encontrado.",
       });
     }
 
     if (!device?.active) {
       return res.status(404).json({
-        error: "Device isn't active.",
+        error: "Dispositivo não está ativo.",
       });
     }
 
-    const location = await Location.create({
+    const payload = {
       deviceId: device._id,
       latitude: Number(latitude),
       longitude: Number(longitude),
-    });
+    };
+
+    const location = await Location.create(payload);
+
+    const locationCache = (cache.get(device._id) as (typeof location)[]) ?? [];
+
+    cache.set(device._id, locationCache.concat(location));
 
     return res.status(201).json(location);
   } catch (error) {
@@ -38,3 +45,5 @@ export async function saveLocation(req: Request, res: Response) {
     res.sendStatus(500);
   }
 }
+
+clearCacheDaily();
