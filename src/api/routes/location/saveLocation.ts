@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Device } from "../../models/Device";
 import { Location } from "../../models/Location";
 import { cache, clearCacheDaily } from "../../utils/cacheControl";
+import { io } from "../..";
 
 export async function saveLocation(req: Request, res: Response) {
   try {
@@ -38,6 +39,8 @@ export async function saveLocation(req: Request, res: Response) {
     const locationCache = (cache.get(device._id) as (typeof location)[]) ?? [];
 
     cache.set(device._id, locationCache.concat(location));
+
+    io.emit("location@new", location);
 
     return res.status(201).json(location);
   } catch (error) {

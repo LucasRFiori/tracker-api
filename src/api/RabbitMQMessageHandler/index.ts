@@ -34,7 +34,7 @@ class RabbitMQMessageHandler {
             console.log("Message saved and removed from queue:", content);
           } catch (e: any) {
             channel.ack(message);
-            console.error("Message not removed from queue:", e.response.data);
+            console.error("Message removed from queue:", e.response.data);
           }
         }
       });

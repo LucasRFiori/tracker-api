@@ -4,12 +4,16 @@ import { config } from "../project.config";
 import router from "./routes";
 import mongoose from "mongoose";
 import RabbitMQMessageHandler from "./RabbitMQMessageHandler";
+import http from "node:http";
+import { Server } from "socket.io";
+
+const app = express();
+const server = http.createServer(app);
+export const io = new Server(server);
 
 mongoose
   .connect(config.MONGO_URL)
   .then(() => {
-    const app = express();
-
     console.log("✅ Connected to MongoDB");
 
     app.use((req, res, next) => {
@@ -24,7 +28,7 @@ mongoose
 
     app.use(router);
 
-    app.listen(config.NODE_PORT, () => {
+    server.listen(config.NODE_PORT, () => {
       console.log(`🚀 Server running at ${config.NODE_URL}`);
     });
 

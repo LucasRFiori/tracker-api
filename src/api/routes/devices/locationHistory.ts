@@ -3,6 +3,7 @@ import { Device } from "../../models/Device";
 import { Location } from "../../models/Location";
 import { cache } from "../../utils/cacheControl";
 import { HTTP } from "../../utils/http";
+import { addHateoasToLocations } from "../../utils/addHateoasToLocations";
 
 export async function locationHistory(req: Request, res: Response) {
   try {
@@ -31,7 +32,12 @@ export async function locationHistory(req: Request, res: Response) {
         createdAt: location.createdAt,
       }));
 
-      return res.json(filteredLocationsFromCache);
+      const locationsHateoas = addHateoasToLocations(
+        filteredLocationsFromCache,
+        device._id
+      );
+
+      return res.json(locationsHateoas);
     }
 
     const locations = await Location.find({ deviceId }).select(
@@ -45,7 +51,9 @@ export async function locationHistory(req: Request, res: Response) {
       });
     }
 
-    return res.json(locations);
+    const locationsHateoas = addHateoasToLocations(locations, device._id);
+
+    return res.json(locationsHateoas);
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
