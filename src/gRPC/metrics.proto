@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package metrics;
+
+service MetricsService {
+  rpc AddLocation (LocationRequest) returns (MetricsResponse);
+}
+
+message LocationRequest {
+  string deviceId = 1;
+  double latitude = 2;
+  double longitude = 3;
+}
+
+message MetricsResponse {
+  double distance = 1;
+  int32 positionCount = 2;
+}

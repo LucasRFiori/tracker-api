@@ -1,9 +1,10 @@
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import { Device } from "../../models/Device";
 import { Location } from "../../models/Location";
 import { cache } from "../../utils/cacheControl";
 import { HTTP } from "../../utils/http";
 import { addHateoasToLocations } from "../../utils/addHateoasToLocations";
+import { Location as LocationType } from "../../../typings/Api.types";
 
 export async function locationHistory(req: Request, res: Response) {
   try {
@@ -26,11 +27,13 @@ export async function locationHistory(req: Request, res: Response) {
     const locationsFromCache = cache.get(deviceId) as typeof locations;
 
     if (locationsFromCache?.length) {
-      const filteredLocationsFromCache = locationsFromCache.map((location) => ({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        createdAt: location.createdAt,
-      }));
+      const filteredLocationsFromCache = locationsFromCache.map(
+        ({ latitude = 0, longitude = 0, createdAt }) => ({
+          latitude,
+          longitude,
+          createdAt,
+        })
+      );
 
       const locationsHateoas = addHateoasToLocations(
         filteredLocationsFromCache,
@@ -40,9 +43,9 @@ export async function locationHistory(req: Request, res: Response) {
       return res.json(locationsHateoas);
     }
 
-    const locations = await Location.find({ deviceId }).select(
+    const locations = (await Location.find({ deviceId }).select(
       "latitude longitude createdAt -_id"
-    );
+    )) as LocationType[];
 
     if (!locations?.length) {
       return res.status(HTTP.NOT_FOUND.CODE).json({

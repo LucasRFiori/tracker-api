@@ -3,6 +3,8 @@ import { Device } from "../../models/Device";
 import { Location } from "../../models/Location";
 import { cache, clearCacheDaily } from "../../utils/cacheControl";
 import { io } from "../..";
+import MetricsClient from "../../../gRPC/metricsClient";
+import { HTTP } from "../../utils/http";
 
 export async function saveLocation(req: Request, res: Response) {
   try {
@@ -15,15 +17,16 @@ export async function saveLocation(req: Request, res: Response) {
     }
 
     const device = await Device.findOne({ code: deviceCode });
+    const currentDistance = device?.totals?.totalKm ?? 0;
 
     if (!device) {
-      return res.status(404).json({
+      return res.status(HTTP.NOT_FOUND.CODE).json({
         error: "Dispositivo não encontrado.",
       });
     }
 
     if (!device?.active) {
-      return res.status(404).json({
+      return res.status(HTTP.NOT_FOUND.CODE).json({
         error: "Dispositivo não está ativo.",
       });
     }
@@ -41,6 +44,19 @@ export async function saveLocation(req: Request, res: Response) {
     cache.set(device._id, locationCache.concat(location));
 
     io.emit("location@new", location);
+
+    const { distance, positionCount } = await MetricsClient.addLocation(
+      device._id,
+      latitude,
+      longitude
+    );
+
+    await Device.findByIdAndUpdate(device._id, {
+      totals: {
+        totalPositions: positionCount,
+        totalKm: distance + currentDistance,
+      },
+    });
 
     return res.status(201).json(location);
   } catch (error) {

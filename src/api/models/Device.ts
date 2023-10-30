@@ -29,5 +29,13 @@ export const Device = model(
       type: Date,
       default: Date.now,
     },
+    totals: {
+      totalPositions: {
+        type: Number,
+      },
+      totalKm: {
+        type: Number,
+      },
+    },
   })
 );
