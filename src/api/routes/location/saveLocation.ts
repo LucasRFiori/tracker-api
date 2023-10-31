@@ -37,6 +37,8 @@ export async function saveLocation(req: Request, res: Response) {
       longitude: Number(longitude),
     };
 
+    await MetricsClient.addLocation(device._id, latitude, longitude);
+
     const location = await Location.create(payload);
 
     const locationCache = (cache.get(device._id) as (typeof location)[]) ?? [];
@@ -44,19 +46,6 @@ export async function saveLocation(req: Request, res: Response) {
     cache.set(device._id, locationCache.concat(location));
 
     io.emit("location@new", location);
-
-    const { distance, positionCount } = await MetricsClient.addLocation(
-      device._id,
-      latitude,
-      longitude
-    );
-
-    await Device.findByIdAndUpdate(device._id, {
-      totals: {
-        totalPositions: positionCount,
-        totalKm: distance + currentDistance,
-      },
-    });
 
     return res.status(201).json(location);
   } catch (error) {

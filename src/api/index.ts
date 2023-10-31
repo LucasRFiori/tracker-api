@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import RabbitMQMessageHandler from "./RabbitMQMessageHandler";
 import http from "node:http";
 import { Server } from "socket.io";
+import { metricsServer } from "../gRPC/metricsServer";
+import * as grpc from "@grpc/grpc-js";
 
 const app = express();
 const server = http.createServer(app);
@@ -29,8 +31,17 @@ mongoose
     app.use(router);
 
     server.listen(config.NODE_PORT, () => {
-      console.log(`🚀 Server running at ${config.NODE_URL}`);
+      console.log(`🚀 Tracking API running at ${config.NODE_URL}`);
     });
+
+    metricsServer.bindAsync(
+      config.GRPC_URL,
+      grpc.ServerCredentials.createInsecure(),
+      () => {
+        metricsServer.start();
+        console.log(`🚀 Metric API running at ${config.GRPC_URL}`);
+      }
+    );
 
     RabbitMQMessageHandler.queueController();
   })
