@@ -10,16 +10,20 @@ export const Location = model(
     },
     deviceId: {
       type: String,
-      require: true,
+      required: true,
       ref: "Device",
+    },
+    brand: {
+      type: String,
+      required: true,
     },
     latitude: {
       type: Number,
-      require: true,
+      required: true,
     },
     longitude: {
       type: Number,
-      require: true,
+      required: true,
     },
     createdAt: {
       type: Date,

@@ -10,20 +10,20 @@ export const Device = model(
     },
     name: {
       type: String,
-      require: true,
+      required: true,
     },
     code: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     active: {
       type: Boolean,
-      require: true,
+      required: true,
     },
     brand: {
       type: String,
-      require: true,
+      required: true,
     },
     createdAt: {
       type: Date,

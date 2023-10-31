@@ -22,4 +22,5 @@ export const config = {
   AMQP_URL: `amqp://${AMQP_USER}:${AMQP_PASSWORD}@localhost`,
   MONGO_URL: `mongodb://${MAIN_URL}:${MONGO_PORT}/tracker`,
   GRPC_URL: `${MAIN_URL}:${GRPC_PORT}`,
+  GRAPHQL_PATH: "/graphql",
 };

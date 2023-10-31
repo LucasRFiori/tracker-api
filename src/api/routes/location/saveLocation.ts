@@ -33,6 +33,7 @@ export async function saveLocation(req: Request, res: Response) {
 
     const payload = {
       deviceId: device._id,
+      brand: device.brand,
       latitude: Number(latitude),
       longitude: Number(longitude),
     };

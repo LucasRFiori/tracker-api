@@ -35,7 +35,7 @@ metricsServer.addService(MetricsDefinition.metrics.MetricsService.service, {
     const device = await Device.findById(deviceId);
 
     const oldTotalKm = device?.totals?.totalKm ?? 0;
-    const oldPositions = await Location.find();
+    const oldPositions = await Location.find({ deviceId });
 
     const { latitude: lastLatitude = 0, longitude: lastLongitude = 0 } =
       lastLocation[0];

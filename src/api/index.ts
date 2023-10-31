@@ -8,6 +8,8 @@ import http from "node:http";
 import { Server } from "socket.io";
 import { metricsServer } from "../gRPC/metricsServer";
 import * as grpc from "@grpc/grpc-js";
+import { schema } from "../graphql/schema";
+import { graphqlHTTP } from "express-graphql";
 
 const app = express();
 const server = http.createServer(app);
@@ -30,8 +32,19 @@ mongoose
 
     app.use(router);
 
+    app.use(
+      config.GRAPHQL_PATH,
+      graphqlHTTP({
+        schema: schema,
+        graphiql: true, // Isso habilita o ambiente de desenvolvimento GraphiQL
+      })
+    );
+
     server.listen(config.NODE_PORT, () => {
       console.log(`🚀 Tracking API running at ${config.NODE_URL}`);
+      console.log(
+        `🚀 Metric GRAPHQL running at ${config.NODE_URL}${config.GRAPHQL_PATH}`
+      );
     });
 
     metricsServer.bindAsync(
