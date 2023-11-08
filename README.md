@@ -22,11 +22,6 @@
 * MongoDB
 
 
-## Fluxograma simplificado
-
-<img width="1171" alt="image" src="https://github.com/LucasRFiori/tracker-broker/assets/47372133/c9c8d8a6-713c-493a-8474-78323f9165c5">
-<img width="661" alt="image" src="https://github.com/LucasRFiori/tracker-broker/assets/47372133/05ab65eb-7dcb-4294-82ac-a39178b5e7c8">
-
 
 ## Documentação
 
