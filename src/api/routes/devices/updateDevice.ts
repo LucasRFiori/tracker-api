@@ -15,7 +15,11 @@ export async function updateDevice(req: Request, res: Response) {
       });
     }
 
-    const device = await Device.findByIdAndUpdate(deviceId, { ...req.body });
+    const device = await Device.findByIdAndUpdate(
+      deviceId,
+      { ...req.body },
+      { new: true }
+    );
 
     if (!device) {
       return res.status(HTTP.NOT_FOUND.CODE).json({
