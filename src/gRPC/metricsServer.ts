@@ -2,7 +2,12 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import * as path from "path";
 
-import { RequestType, ResponseType } from "../typings/gRPC.types";
+import {
+  AddLocationRequestType,
+  AddLocationResponseType,
+  UpdateDeviceBrandRequest,
+  UpdateDeviceBrandResponse,
+} from "../typings/gRPC.types";
 import { calculateDistanceBetweenPoints } from "../api/utils/calculateDistanceBetweenPoints";
 import { Location } from "../api/models/Location";
 import { Device } from "../api/models/Device";
@@ -16,8 +21,8 @@ export const metricsServer = new grpc.Server();
 
 metricsServer.addService(MetricsDefinition.metrics.MetricsService.service, {
   AddLocation: async (
-    call: grpc.ServerUnaryCall<RequestType, ResponseType>,
-    callback: grpc.sendUnaryData<ResponseType>
+    call: grpc.ServerUnaryCall<AddLocationRequestType, AddLocationResponseType>,
+    callback: grpc.sendUnaryData<AddLocationResponseType>
   ) => {
     const { deviceId, latitude, longitude } = call.request;
 
@@ -60,5 +65,39 @@ metricsServer.addService(MetricsDefinition.metrics.MetricsService.service, {
     };
 
     callback(null, response);
+  },
+  UpdateDeviceBrand: async (
+    call: grpc.ServerUnaryCall<
+      UpdateDeviceBrandRequest,
+      UpdateDeviceBrandResponse
+    >,
+    callback: grpc.sendUnaryData<UpdateDeviceBrandResponse>
+  ) => {
+    const { deviceId, newBrand } = call.request;
+
+    try {
+      const updatedLocations = await Location.find({ deviceId }).updateMany({
+        brand: newBrand,
+      });
+
+      if (!updatedLocations) {
+        return callback({
+          code: grpc.status.NOT_FOUND,
+          details: "Locations not found.",
+        });
+      }
+
+      const response = {
+        success: true,
+      };
+
+      callback(null, response);
+    } catch (error) {
+      console.error(error);
+      return callback({
+        code: grpc.status.INTERNAL,
+        details: "Internal server error.",
+      });
+    }
   },
 });

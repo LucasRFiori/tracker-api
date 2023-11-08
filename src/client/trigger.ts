@@ -1,8 +1,16 @@
 import * as mqtt from "mqtt";
 import { config } from "../project.config";
 
+const mqttClientId = process.argv[2];
+
+console.log(config.MQTT_CLIENT_ID);
+if (!mqttClientId && !config.MQTT_CLIENT_ID) {
+  console.error("❌ MQTT_CLIENT_ID was not provided.");
+  process.exit(1);
+}
+
 const options = {
-  clientId: config.MQTT_CLIENT_ID,
+  clientId: mqttClientId ?? config.MQTT_CLIENT_ID,
   username: config.MQTT_USERNAME,
   password: config.MQTT_PASSWORD,
 };
@@ -10,8 +18,15 @@ const options = {
 const client = mqtt.connect(config.MQTT_BROKER_URL, options);
 
 function generateRandomCoordinates() {
-  const latitude = Math.random() * 180 - 90;
-  const longitude = Math.random() * 360 - 180;
+  const minLatitude = -90;
+  const maxLatitude = 90;
+  const minLongitude = -180;
+  const maxLongitude = 180;
+
+  const latitude = Math.random() * (maxLatitude - minLatitude) + minLatitude;
+  const longitude =
+    Math.random() * (maxLongitude - minLongitude) + minLongitude;
+
   return `${latitude},${longitude}`;
 }
 

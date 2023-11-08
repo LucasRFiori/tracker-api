@@ -4,6 +4,7 @@ package metrics;
 
 service MetricsService {
   rpc AddLocation (LocationRequest) returns (MetricsResponse);
+  rpc UpdateDeviceBrand (UpdateDeviceBrandRequest) returns (UpdateDeviceBrandResponse);
 }
 
 message LocationRequest {
@@ -15,4 +16,13 @@ message LocationRequest {
 message MetricsResponse {
   double distance = 1;
   int32 positionCount = 2;
+}
+
+message UpdateDeviceBrandRequest {
+  string deviceId = 1;
+  string newBrand = 2;
+}
+
+message UpdateDeviceBrandResponse {
+  bool success = 1;
 }

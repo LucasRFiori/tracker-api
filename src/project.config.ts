@@ -23,4 +23,5 @@ export const config = {
   MONGO_URL: `mongodb://${MAIN_URL}:${MONGO_PORT}/tracker`,
   GRPC_URL: `${MAIN_URL}:${GRPC_PORT}`,
   GRAPHQL_PATH: "/graphql",
+  VITE_URL: `http://127.0.0.1:5173`,
 };

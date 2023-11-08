@@ -38,9 +38,15 @@ export async function saveLocation(req: Request, res: Response) {
       longitude: Number(longitude),
     };
 
-    await MetricsClient.addLocation(device._id, latitude, longitude);
+    let location;
 
-    const location = await Location.create(payload);
+    try {
+      await MetricsClient.addLocation(device._id, latitude, longitude);
+      location = await Location.create(payload);
+    } catch (error) {
+      console.error("Error adding location to metrics:", error);
+      location = await Location.create(payload);
+    }
 
     const locationCache = (cache.get(device._id) as (typeof location)[]) ?? [];
 

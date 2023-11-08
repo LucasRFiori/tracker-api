@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run start:api\" \"npm run start:broker\" \"npm run start:trigger\" ",
+    "start": "concurrently \"npm run start:api\" \"npm run start:broker\" ",
     "start:api": "nodemon --watch 'src/' --exec 'ts-node src/api/index.ts' -e ts",
-    "start:trigger": "nodemon --watch 'src/' --exec 'ts-node src/client/trigger.ts' -e ts",
+    "start:trigger": "ts-node src/client/trigger.ts",
     "start:broker": "nodemon --watch 'src/' --exec 'ts-node src/broker/index.ts' -e ts"
   },
   "keywords": [],

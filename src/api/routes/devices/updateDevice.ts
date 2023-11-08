@@ -3,6 +3,7 @@ import { Device } from "../../models/Device";
 import { Hateoas } from "../../hateoas";
 import { config } from "../../../project.config";
 import { HTTP } from "../../utils/http";
+import MetricsClient from "../../../gRPC/metricsClient";
 
 export async function updateDevice(req: Request, res: Response) {
   try {
@@ -20,6 +21,17 @@ export async function updateDevice(req: Request, res: Response) {
       return res.status(HTTP.NOT_FOUND.CODE).json({
         error: "Device not found.",
       });
+    }
+
+    if (req.body.brand) {
+      try {
+        await MetricsClient.updateDeviceBrand(deviceId, req.body.brand);
+        console.log(
+          `Metrics API notified successfully, newBrand: ${req.body.brand}`
+        );
+      } catch (e) {
+        console.log("Error connecting to the Metrics API.", e);
+      }
     }
 
     return res.status(HTTP.OK.CODE).json({

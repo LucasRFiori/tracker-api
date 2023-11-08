@@ -22,7 +22,7 @@ export async function getDevice(req: Request, res: Response) {
       });
     }
 
-    return res.json({
+    return res.status(HTTP.OK.CODE).json({
       device,
       links: Hateoas.createResourceLinks(
         `${config.NODE_URL}/devices`,

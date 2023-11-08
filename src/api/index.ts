@@ -13,7 +13,12 @@ import { graphqlHTTP } from "express-graphql";
 
 const app = express();
 const server = http.createServer(app);
-export const io = new Server(server);
+export const io = new Server(server, {
+  cors: {
+    origin: config.VITE_URL,
+    methods: ["GET"],
+  },
+});
 
 mongoose
   .connect(config.MONGO_URL)
@@ -36,7 +41,7 @@ mongoose
       config.GRAPHQL_PATH,
       graphqlHTTP({
         schema: schema,
-        graphiql: true, // Isso habilita o ambiente de desenvolvimento GraphiQL
+        graphiql: true,
       })
     );
 
