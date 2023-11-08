@@ -34,7 +34,6 @@ Como iniciar?
 
 ```cli
 # Instalando dependências NPM, YARN, PNPM
-
 npm i
 
 # Inicia a API, BROKER, GRAPHQL, MQTT e AMQP
