@@ -138,6 +138,61 @@ yarn start:trigger {{CODIGO}}
 }
 ```
 
+## GraphQL
+
+### Localizações por dispositivo:
+
+```graphql
+query Device {
+    device(deviceId: "", date: "30/10/2023") {
+        deviceId
+        brand
+        totalPositions
+        totalKm
+    }
+}
+
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `deviceId` | `string` | Marca dos dispositivos. |
+| `date` | `string` | Todas as localizações nessa data (OPCIONAL). |
+
+### Localizações por marca:
+
+```graphql
+query Brand {
+    brand(brand: "", date: "") {
+        deviceCount
+        brand
+        totalPositions
+        totalKm
+    }
+}
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `brand` | `string` | Marca dos dispositivos. |
+| `date` | `string` | Todas as localizações nessa data (OPCIONAL). |
+
+### Todas as localizações:
+
+```graphql
+query General {
+    general(date: "") {
+        deviceCount
+        totalPositions
+        totalKm
+    }
+}
+
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `date` | `string` | Todas as localizações nessa data (OPCIONAL). |
 
 ## Autores
 
