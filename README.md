@@ -196,4 +196,4 @@ query General {
 
 ## Autores
 
-- [Lucas Fiori](https://www.linkedin.com/in/lucas-fiori-763326196/) - RA: 600687
+- [Lucas Fiori](https://www.linkedin.com/in/lucas-fiori-763326196/)
