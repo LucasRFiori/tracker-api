@@ -197,8 +197,3 @@ query General {
 ## Autores
 
 - [Lucas Fiori](https://www.linkedin.com/in/lucas-fiori-763326196/) - RA: 600687
-- Rafael Yoshio Tanaka Eto - RA: 601063
-- João Vitor Mouro Barboza - RA: 600652
-- Felipe Hiroyuki Kaihatsu - RA: 600636
-- Nicolas Hiroyuki Nacasawa - RA: 605700
-
